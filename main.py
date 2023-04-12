@@ -7,7 +7,7 @@ from tkinter import ttk
 class AVisGUI():
     def __init__(self):
         self.root = Tk()
-        self.root.title("Spotipy AVis")
+        self.root.title("Spotify AVis")
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_rowconfigure(1, weight=5)
         self.root.grid_rowconfigure(2, weight=1)
