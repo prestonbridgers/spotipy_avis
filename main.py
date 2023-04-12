@@ -1,33 +1,62 @@
 import pyaudio
+import os
 from tkinter import *
 from tkinter import ttk
 
 
-class AVisGUI:
+class AVisGUI():
     def __init__(self):
         self.root = Tk()
-        self.root.title("Spotipy Audio Visualizer")
+        self.root.title("Spotipy AVis")
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_rowconfigure(1, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
+        self.root.grid_columnconfigure(1, weight=1)
 
-        # Create main frame
-        self.mainframe = ttk.Frame(self.root, padding="3 3 12 12")
-        self.mainframe.grid(column=0, row=0, sticky="N W E S")
-        self.root.columnconfigure(0, weight=1)
-        self.root.rowconfigure(0, weight=1)
+        self.mainframe = ttk.Frame(self.root,
+                                   width=700,
+                                   height=500)
+        self.mainframe.grid(column=0,
+                            row=0)
 
-        # Creating entry widget
-        self.feet = StringVar() # Create a variable to hold the value
-        # Create the actual entry widget inside the main frame
-        feet_entry = ttk.Entry(self.mainframe, width=7, textvariable=self.feet)
-        feet_entry.grid(column=2, row=1, sticky="W E")
+        self.selected_audiofile = StringVar()
+        self.audio_selector = ttk.Combobox(self.mainframe,
+                                           textvariable=self.selected_audiofile,
+                                           width=100,
+                                           height=25)
+        self.audio_selector['values'] = AVisGUI.get_audio_files()
+        self.audio_selector.grid(column=1, row=0)
 
-        self.meters = StringVar()
-        ttk.Label(self.mainframe, textvariable=self.meters).grid(column=2, row=2, sticky="W E")
+        self.audio_selector_label = ttk.Label(self.mainframe, text="Choose Audio:")
+        self.audio_selector_label.grid(column=0, row=0)
 
-        ttk.Button(self.mainframe, text="Calculate", command=self.calculate).grid(column=3, row=3, sticky="W")
+        self.visual_canvas = Canvas(self.root, width=700, height=400, background='gray75')
+        self.visual_canvas.grid(column=0, row=1, sticky="N S E W")
 
-        ttk.Label(self.mainframe, text="feet").grid(column=3, row=1, sticky="W")
-        ttk.Label(self.mainframe, text="=").grid(column=1, row=2, sticky="E")
-        ttk.Label(self.mainframe, text="meters").grid(column=3, row=2, sticky="W")
+        self.controls_frame = ttk.Frame(self.root)
+        self.controls_frame.grid(column=0, row=2, sticky="N S W E")
+
+        self.play_button = ttk.Button(self.controls_frame, text="Play", command=self.on_play)
+        self.play_button.grid(column=0, row=0, sticky="W")
+
+        self.pause_button = ttk.Button(self.controls_frame, text="Pause", command=self.on_pause)
+        self.pause_button.grid(column=1, row=0)
+
+        self.stop_button = ttk.Button(self.controls_frame, text="Stop", command=self.on_stop)
+        self.stop_button.grid(column=2, row=0, sticky="E")
+
+    @staticmethod
+    def get_audio_files():
+        return os.listdir("./audio")
+
+    def on_play(self):
+        print(f'User has played {self.selected_audiofile.get()}')
+
+    def on_pause(self):
+        print('User has paused')
+
+    def on_stop(self):
+        print('User has stopped')
 
     def calculate(self, *args):
         try:
