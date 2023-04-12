@@ -4,6 +4,9 @@ __pycache__/
 *$py.class
 .idea/
 audio/
+test.py
+millionsongsubset_full.tar.gz
+MillionSongSubset/
 
 # C extensions
 *.so
