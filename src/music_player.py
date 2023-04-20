@@ -31,11 +31,14 @@ class MusicPlayer:
         with wave.open(audio_path, 'rb') as wf:
             def callback(in_data, frame_count, time_info, status):
                 data = wf.readframes(frame_count)
+                place = wf.tell()
+                print(f'place in song: {place}')      # Incremented by frame_count
+                print(f'frame_count: {frame_count}')  # 1024
                 return data, pyaudio.paContinue
 
-            audio_stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                                  channels=wf.getnchannels(),
-                                  rate=wf.getframerate(),
+            audio_stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),  # 8
+                                  channels=wf.getnchannels(),                         # 2
+                                  rate=wf.getframerate(),                             # 44100Hz
                                   output=True,
                                   stream_callback=callback)
 
