@@ -1,4 +1,5 @@
 import os
+import glob
 from tkinter import *
 from tkinter import ttk
 
@@ -27,7 +28,8 @@ class AVisGUI:
 
         self.selected_audiofile = StringVar()
         self.audio_selector = ttk.Combobox(self.mainframe,
-                                           textvariable=self.selected_audiofile)
+                                           textvariable=self.selected_audiofile,
+                                           width=50)
         self.audio_selector['values'] = AVisGUI.get_audio_files()
         self.audio_selector.grid(column=1, row=0)
 
@@ -54,7 +56,7 @@ class AVisGUI:
 
     @staticmethod
     def get_audio_files():
-        return os.listdir("../audio")
+        return glob.glob("../audio/*.wav")
 
     def on_play(self):
         file = self.selected_audiofile.get()
