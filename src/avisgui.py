@@ -1,7 +1,4 @@
-import os
 import glob
-from multiprocessing import Process
-import time
 from tkinter import *
 from tkinter import ttk
 import json
@@ -14,6 +11,11 @@ class AVisGUI:
         self.mp = MusicPlayer()
         self.music_playing = False
         self.data = None
+        self.timbrebars = []
+        self.pitchbars = []
+        self.bar_height = 200
+        self.pitchbars_startx = 10
+        self.timbrebars_startx = 350
         self.root = Tk()
         self.root.title("Spotify AVis")
         self.root.grid_rowconfigure(0, weight=1)
@@ -57,18 +59,15 @@ class AVisGUI:
         self.pause_button.grid(column=1, row=0)
 
         self.canvas_text = self.visual_canvas.create_text(5, 5, anchor='nw', text=f'Song Position: {song_place.value}')
-        self.bar_height = 200
-        self.pitchbars_startx = 10
-        self.timbrebars_startx = 350
-        self.timbrebars = []
-        self.pitchbars = []
         pitch_x_accum = self.pitchbars_startx
         timbre_x_accum = self.timbrebars_startx
         for i in range(12):
             self.pitchbars.append(self.visual_canvas.create_rectangle(pitch_x_accum, self.bar_height,
-                                                                      pitch_x_accum + 20, self.bar_height, fill='black'))
+                                                                      pitch_x_accum + 20, self.bar_height,
+                                                                      fill='black'))
             self.timbrebars.append(self.visual_canvas.create_rectangle(timbre_x_accum, self.bar_height,
-                                                                       timbre_x_accum + 20, self.bar_height, fill='black'))
+                                                                       timbre_x_accum + 20, self.bar_height,
+                                                                       fill='black'))
             pitch_x_accum += 25
             timbre_x_accum += 25
 
@@ -105,8 +104,8 @@ class AVisGUI:
         self.mp.terminate()
 
 
-def maprange(value, inMin, inMax, outMin, outMax):
-    return outMin + (((value - inMin) / (inMax - inMin)) * (outMax - outMin))
+def maprange(value, inmin, inmax, outmin, outmax):
+    return outmin + (((value - inmin) / (inmax - inmin)) * (outmax - outmin))
 
 
 def gui_updater(app):
@@ -139,7 +138,7 @@ def gui_updater(app):
 
 
 def main():
-    #multiprocessing.set_start_method('spawn')
+    # multiprocessing.set_start_method('spawn')
     app = AVisGUI()
     app.root.after(50, gui_updater, app)
     app.start()
