@@ -35,13 +35,11 @@ class MusicPlayer:
                 data = wf.readframes(frame_count)
                 place = wf.tell()
                 song_place.value = place
-                # print(f'place in song: {place}')      # Incremented by frame_count
-                # print(f'frame_count: {frame_count}')  # 1024
                 return data, pyaudio.paContinue
 
-            audio_stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),  # 8
-                                  channels=wf.getnchannels(),                         # 2
-                                  rate=wf.getframerate(),                             # 44100Hz
+            audio_stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                                  channels=wf.getnchannels(),
+                                  rate=wf.getframerate(),
                                   output=True,
                                   stream_callback=callback)
 
