@@ -16,6 +16,10 @@ class AVisGUI:
         self.bar_height = 200
         self.pitchbars_startx = 10
         self.timbrebars_startx = 350
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Begin the GUI initialization ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         self.root = Tk()
         self.root.title("Spotify AVis")
         self.root.grid_rowconfigure(0, weight=1)
@@ -76,6 +80,9 @@ class AVisGUI:
 
         self.stop_button = ttk.Button(self.controls_frame, text="Stop", command=self.on_stop)
         self.stop_button.grid(column=2, row=0)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End the GUI initialization ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @staticmethod
     def get_audio_files():
@@ -109,21 +116,33 @@ def maprange(value, inmin, inmax, outmin, outmax):
 
 
 def gui_updater(app):
-    app.visual_canvas.itemconfigure(app.canvas_text, text=f'Song Position: {song_place.value}')
+    current_time = song_place.value / 22050
+    app.visual_canvas.itemconfigure(app.canvas_text, text=f'Song Position: {current_time}')
     if app.data is not None:
-        min_segment = 0
-        max_segment = len(app.data['segments'])
-        min_frame = 0
-        max_frame = 6885179
-        current_segment = int(maprange(song_place.value, min_frame, max_frame, min_segment, max_segment))
+
+        # Find the proper segment to show (slow)
+        current_segment = None
+        prev_seg = app.data['segments'][0]
+        for seg in app.data['segments']:
+            if prev_seg['start'] <= current_time < seg['start']:
+                current_segment = prev_seg
+                break
+            else:
+                prev_seg = seg
+
+        # min_segment = 0
+        # max_segment = len(app.data['segments'])
+        # min_frame = 0
+        # max_frame = 6885179
+        # current_segment = int(maprange(song_place.value, min_frame, max_frame, min_segment, max_segment))
 
         timbres = []
         pitches = []
         pitch_x_accum = app.pitchbars_startx
         timbre_x_accum = app.timbrebars_startx
         for i in range(12):
-            timbres.append(app.data['segments'][current_segment]['timbre'][i])
-            pitches.append(app.data['segments'][current_segment]['pitches'][i])
+            timbres.append(current_segment['timbre'][i])
+            pitches.append(current_segment['pitches'][i])
             app.visual_canvas.delete(app.timbrebars[i])
             app.visual_canvas.delete(app.pitchbars[i])
 
