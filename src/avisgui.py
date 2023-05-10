@@ -2,6 +2,7 @@ import glob
 from tkinter import *
 from tkinter import ttk
 import json
+import re
 
 from music_player import MusicPlayer, song_place
 
@@ -91,9 +92,11 @@ class AVisGUI:
     def on_play(self):
         self.music_playing = True
         file = self.selected_audiofile.get()
+        song_name = re.match('^.*/(.*)\..*$', file)[1]
+        analysis = f'../audio/{song_name}.json'
 
         # Load the data
-        fd = open('../audio/meeting_the_master.json')
+        fd = open(analysis)
         self.data = json.load(fd)
 
         self.mp.play_song(file)
@@ -111,10 +114,6 @@ class AVisGUI:
         self.mp.terminate()
 
 
-def maprange(value, inmin, inmax, outmin, outmax):
-    return outmin + (((value - inmin) / (inmax - inmin)) * (outmax - outmin))
-
-
 def gui_updater(app):
     current_time = song_place.value / 22050
     app.visual_canvas.itemconfigure(app.canvas_text, text=f'Song Position: {current_time}')
@@ -129,12 +128,6 @@ def gui_updater(app):
                 break
             else:
                 prev_seg = seg
-
-        # min_segment = 0
-        # max_segment = len(app.data['segments'])
-        # min_frame = 0
-        # max_frame = 6885179
-        # current_segment = int(maprange(song_place.value, min_frame, max_frame, min_segment, max_segment))
 
         timbres = []
         pitches = []

@@ -4,6 +4,7 @@ import os
 import pyaudio
 import time
 import wave
+import librosa
 
 song_place = Value('i', 0)
 
