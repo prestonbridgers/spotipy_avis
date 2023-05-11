@@ -17,6 +17,14 @@ class AVisGUI:
         self.bar_height = 200
         self.pitchbars_startx = 10
         self.timbrebars_startx = 350
+        self.window_width = 655
+        self.window_height = 500
+        self.beat_label_x = 10
+        self.bar_label_x = 10
+        self.section_label_x = 10
+        self.beat_label_y = self.window_height - 190
+        self.bar_label_y = self.beat_label_y + 20
+        self.section_label_y = self.bar_label_y + 20
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Begin the GUI initialization ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,8 +37,8 @@ class AVisGUI:
         self.root.grid_columnconfigure(0, weight=1)
 
         self.mainframe = ttk.Frame(self.root,
-                                   width=655,
-                                   height=500,
+                                   width=self.window_width,
+                                   height=self.window_height,
                                    borderwidth=5)
         self.mainframe.grid_rowconfigure(0, weight=1)
         self.mainframe.grid_columnconfigure(0, weight=1)
@@ -78,6 +86,10 @@ class AVisGUI:
 
         self.canvas_pitchlbl = self.visual_canvas.create_text(170, 375, text=f'Segment Pitch Over Time')
         self.canvas_timbrelbl = self.visual_canvas.create_text(515, 375, text=f'Segment Timbre Over Time')
+
+        self.canvas_beatlbl = self.visual_canvas.create_text(self.beat_label_x, self.beat_label_y, anchor='nw', text='Beat 0 Start: 0.0')
+        self.canvas_barlbl = self.visual_canvas.create_text(self.bar_label_x, self.bar_label_y, anchor='nw', text='Bar 0 Start: 0.0')
+        self.canvas_sectionlbl = self.visual_canvas.create_text(self.section_label_x, self.section_label_y, anchor='nw', text='Section 0 Start: 0.0')
 
         self.stop_button = ttk.Button(self.controls_frame, text="Stop", command=self.on_stop)
         self.stop_button.grid(column=2, row=0)
