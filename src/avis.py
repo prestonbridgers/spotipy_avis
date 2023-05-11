@@ -35,7 +35,7 @@ def gui_updater(app):
         for i, beat in enumerate(app.data['beats']):
             if prev_beat['start'] <= current_time < beat['start']:
                 current_beat = prev_beat
-                beat_color = i % 4
+                beat_color = i % app.data['track']['time_signature']
                 break
             else:
                 prev_beat = beat
@@ -48,7 +48,7 @@ def gui_updater(app):
         for i, bar in enumerate(app.data['bars']):
             if prev_bar['start'] <= current_time < bar['start']:
                 current_bar = prev_bar
-                bar_color = i % 4
+                bar_color = i % app.data['track']['time_signature']
                 break
             else:
                 prev_bar = bar
